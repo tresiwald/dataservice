@@ -9,8 +9,8 @@ const async = require('async');
 
 export const getData = (token: string, callback: Function) => {
     let paths = {}
-    getPaths(token).forEach((path: string, index:string) => {
-        paths[('path'+index)]= ("/sftp/ikcdata" + path.substr(1, path.length - 1))
+    getPaths(token).forEach((path: string, index:number) => {
+        paths[('path'+index.toString())]= ("/sftp/ikcdata" + path.substr(1, path.length - 1))
     })
     console.log("-----Path-----", paths)
     SFTP.init(() => {
