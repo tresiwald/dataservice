@@ -104,7 +104,7 @@ export class Server {
             console.log("data ready, sending it to client");
             const stream = ss.createStream();
             const bufferStream = new BufferStream.PassThrough();
-            bufferStream.end(buffer);
+            bufferStream.end(data);
             bufferStream.pipe(stream);
             
              ss(ws).emit('route', stream);
