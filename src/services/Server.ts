@@ -35,11 +35,11 @@ export class Server {
         const server = require('https').createServer({
             key: fs.readFileSync( cfg.ssl_key ),
             cert: fs.readFileSync( cfg.ssl_cert )
-        }).listen(cfg.port);
-        this.io = require('socket.io')(server);//, {origins: allowedOrigins});
+        })
+        this.io = require('socket.io').listen(server);//, {origins: allowedOrigins});
         //this.io.set('origins', 'https://localhost:8888  http://localhost:8888 *://*:*');
         //this.io.set('transports', [ 'websocket' ]);
-        this.io.listen(port);
+        server.listen(cfg.port);
         this.waitForConnection();
     };
 
