@@ -112,14 +112,8 @@ export class Server {
                     bufferStream.write(data.slice(i, i+ data.length-1))            
                 }
             }
-            bufferStream.end();
-            bufferStream.pipe(stream);
             
-             ss(ws).emit(message.id, stream);
-            /*const responseMessage = ServerUtils.checkData(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength), message.id);
-            this.sendMessage(ServerUtils.getStream(responseMessage), ws, () => {
-                console.log("SENT");
-            });*/
+             ss(ws).emit(message.id, ServerUtils.getStream(responseMessage));
         });
     };
 
@@ -135,10 +129,20 @@ class ServerUtils {
 
     static getStream = (msg: Message): any => {
         const stream = ss.createStream();
-        const encodeStream = msgpack.createEncodeStream();
-        encodeStream.pipe(stream);
-        encodeStream.write(msg);
-        encodeStream.end();
+        const arrayBuffer = msgpack.encode(msg);
+        const bufferStream = new BufferStream.PassThrough();
+        
+        for(var i = 0; i<arrayBuffer.length; i = i + 1000000){
+            if((i + 1000000) < arrayBuffer.length){
+                console.log("Put", i, (i+1000000))
+                bufferStream.write(arrayBuffer.slice(i, i+ 1000000))
+            }else{
+                bufferStream.write(arrayBuffer.slice(i, i+ arrayBuffer.length-1))            
+            }
+        }
+        
+        bufferStream.end();
+        bufferStream.pipe(stream);
         return stream;
     };
 
