@@ -7,7 +7,7 @@ import {Store} from "./Store/Store";
 import * as Data from "./Data";
 import * as safeBuffer from "safe-buffer";
 const Buffer = safeBuffer.Buffer;
-const port = 3099;
+const port = 8080;
 
 const allowedOrigins = "https://localhost:8888  http://localhost:8888 *://*:*";
 const path = require('path');
