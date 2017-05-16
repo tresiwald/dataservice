@@ -8,6 +8,10 @@ import * as Data from "./Data";
 import * as safeBuffer from "safe-buffer";
 const fs = require('fs');
 const Buffer = safeBuffer.Buffer;
+const BufferStream = require('stream');
+const Duplex = require('stream').Duplex;  
+
+
 const port = 8080;
 
 const allowedOrigins = "https://localhost:8888  http://localhost:8888 *://*:*";
@@ -67,17 +71,17 @@ export class Server {
 
     processRequest = (stream: any, ws: WebSocket) => {
         ServerUtils.streamToData(stream, (data: any) => {
-            this.processPayload(data, ws);
+            this.processPayload(stream, data, ws);
         });
     };
 
-    processPayload = ((message: Message, ws: WebSocket) => {
+    processPayload = ((stream:any, message: Message, ws: WebSocket) => {
         console.log(message);
         switch (message.type.value) {
             case MessageType.TOKEN_REQUEST.value:
                 return this.processTokenRequest(message, ws);
             case MessageType.DATA_REQUEST.value:
-                return this.processDataRequest(message, ws);
+                return this.processDataRequest(stream, message, ws);
         }
     });
 
@@ -93,15 +97,18 @@ export class Server {
         });
     };
 
-    processDataRequest = (message: Message, ws: WebSocket) => {
+    processDataRequest = (stream:any, message: Message, ws: WebSocket) => {
         console.log("processDataRequest");
         const token = (message as DataRequestMessage).body.token;
         Data.getData(token, (data: Buffer) => {
             console.log("data ready, sending it to client");
-            const responseMessage = ServerUtils.checkData(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength), message.id);
+            const bufferStream = new BufferStream.PassThrough();
+            bufferStream.end(data);
+            bufferStream.pipe(stream);
+            /*const responseMessage = ServerUtils.checkData(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength), message.id);
             this.sendMessage(ServerUtils.getStream(responseMessage), ws, () => {
                 console.log("SENT");
-            });
+            });*/
         });
     };
 
@@ -118,6 +125,7 @@ class ServerUtils {
     static getStream = (msg: Message): any => {
         const stream = ss.createStream();
         const encodeStream = msgpack.createEncodeStream();
+        
         encodeStream.pipe(stream);
         encodeStream.write(msg);
         encodeStream.end();
