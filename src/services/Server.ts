@@ -107,9 +107,9 @@ export class Server {
             for(var i = 0; i<data.length; i = i + 1000000){
                 if((i + 1000000) < data.length){
                     console.log("Put", i, (i+1000000))
-                    bufferStream.write(Buffer.from(data),i,1000000)
+                    bufferStream.write(Buffer.from(data,i,1000000))
                 }else{
-                    bufferStream.write(Buffer.from(data),i,data.length -1)                
+                    bufferStream.write(Buffer.from(data,i,data.length -1))                
                 }
             }
             bufferStream.end();
