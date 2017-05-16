@@ -17,7 +17,7 @@ export const getData = (token: string, callback: Function) => {
             paths,
             (path:any,callback:any)=> {
                 SFTP.readFile(path, (data:any)=>{
-                    callback(data)
+                    callback(null,data)
                 })
             },
             (results: any, err: any) => {
