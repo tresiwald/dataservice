@@ -20,7 +20,7 @@ export const getData = (token: string, callback: Function) => {
                     callback(null,data)
                 })
             },
-            (results: any, err: any) => {
+            (err: any, results: any) => {
                 callback(results)
             })
     })
