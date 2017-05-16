@@ -14,10 +14,10 @@ export const getData = (token: string, callback: Function) => {
     console.log("-----Path-----", paths)
 
     SFTP.init(() => {
-        async.mapSeries(
+        async.mapValuesSeries(
             paths,
             SFTP.readFile,
-            (err: any, results: any) => {
+            (results: any, err: any) => {
                 callback(results)
             })
     })
