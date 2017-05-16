@@ -96,7 +96,7 @@ export class Server {
     processDataRequest = (message: Message, ws: WebSocket) => {
         console.log("processDataRequest");
         const token = (message as DataRequestMessage).body.token;
-        Data.getData(token, (data: Buffer[]) => {
+        Data.getData(token, (data: Buffer) => {
             console.log("data ready, sending it to client");
             const responseMessage = ServerUtils.checkData(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength), message.id);
             this.sendMessage(ServerUtils.getStream(responseMessage), ws, () => {
