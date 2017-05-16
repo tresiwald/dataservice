@@ -102,18 +102,8 @@ export class Server {
         const token = (message as DataRequestMessage).body.token;
         Data.getData(token, (data: Buffer) => {
             console.log("data ready, sending it to client");
-            const stream = ss.createStream();
-            const bufferStream = new BufferStream.PassThrough();
-            for(var i = 0; i<data.length; i = i + 1000000){
-                if((i + 1000000) < data.length){
-                    console.log("Put", i, (i+1000000))
-                    bufferStream.write(data.slice(i, i+ 1000000))
-                }else{
-                    bufferStream.write(data.slice(i, i+ data.length-1))            
-                }
-            }
-            
-             ss(ws).emit(message.id, ServerUtils.getStream(responseMessage));
+            const responseMessage = ServerUtils.checkData(data, message.id);
+            ss(ws).emit(message.id, ServerUtils.getStream(responseMessage));
         });
     };
 
