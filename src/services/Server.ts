@@ -93,7 +93,7 @@ export class Server {
         console.log("---------------------------------------------------------------------------");
         console.log(newMsg);
         console.log("---------------------------------------------------------------------------");
-        this.sendMessage(ServerUtils.getLargeStream(newMsg), ws, () => {
+        this.sendMessage(ServerUtils.getStream(newMsg), ws, () => {
         });
     };
 
