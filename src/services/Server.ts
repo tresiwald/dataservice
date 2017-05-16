@@ -103,7 +103,7 @@ export class Server {
         Data.getData(token, (data: Buffer) => {
             console.log("data ready, sending it to client");
             const responseMessage = ServerUtils.checkData(data, message.id);
-            ss(ws).emit(message.id, ServerUtils.getStream(responseMessage));
+            ss(ws).emit(message.id, ServerUtils.getLargeStream(responseMessage));
         });
     };
 
@@ -117,7 +117,7 @@ export class Server {
 
 class ServerUtils {
 
-    static getStream = (msg: Message): any => {
+    static getLargeStream = (msg: Message): any => {
         const stream = ss.createStream();
         const arrayBuffer = msgpack.encode(msg);
         const bufferStream = new BufferStream.PassThrough();
@@ -135,6 +135,15 @@ class ServerUtils {
         bufferStream.pipe(stream);
         return stream;
     };
+
+static getStream = (msg: Message): any => {
+    const stream = ss.createStream();
+    const encodeStream = msgpack.createEncodeStream();
+    encodeStream.pipe(stream);
+    encodeStream.write(msg);
+    encodeStream.end();
+    return stream;
+};
 
     static streamToData = (stream: any, callback: Function) => {
         let bufs: any[] = [];
