@@ -102,13 +102,10 @@ export class Server {
         const token = (message as DataRequestMessage).body.token;
         Data.getData(token, (data: Buffer) => {
             console.log("data ready, sending it to client");
-            const bufferStream = new BufferStream.PassThrough();
-            bufferStream.end(data);
-            bufferStream.pipe(stream);
-            /*const responseMessage = ServerUtils.checkData(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength), message.id);
+            const responseMessage = ServerUtils.checkData(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength), message.id);
             this.sendMessage(ServerUtils.getStream(responseMessage), ws, () => {
                 console.log("SENT");
-            });*/
+            });
         });
     };
 
@@ -124,11 +121,7 @@ class ServerUtils {
 
     static getStream = (msg: Message): any => {
         const stream = ss.createStream();
-        const encodeStream = msgpack.createEncodeStream();
-        
-        encodeStream.pipe(stream);
-        encodeStream.write(msg);
-        encodeStream.end();
+        ss.createBlobReadStream(msg).pipe(stream);
         return stream;
     };
 
