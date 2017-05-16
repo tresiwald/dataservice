@@ -98,7 +98,7 @@ export class Server {
         const token = (message as DataRequestMessage).body.token;
         Data.getData(token, (data: string) => {
             console.log("data ready, sending it to client");
-            const responseMessage = ServerUtils.checkData(data, message.id);
+            const responseMessage = ServerUtils.checkData(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength), message.id);
             this.sendMessage(ServerUtils.getStream(responseMessage), ws, () => {
                 console.log("SENT");
             });
