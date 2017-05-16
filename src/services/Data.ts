@@ -14,7 +14,7 @@ export const getData = (token: string, callback: Function) => {
     })
     console.log("-----Path-----", paths)
     SFTP.init(() => {
-        async.mapSeries(
+        async.mapValues(
             paths,
             (path:any,callback:any)=> {
                 SFTP.readFile(path, callback)
