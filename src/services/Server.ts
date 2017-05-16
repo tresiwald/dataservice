@@ -107,7 +107,7 @@ export class Server {
             bufferStream.end(data);
             bufferStream.pipe(stream);
             
-             ss(ws).emit('route', stream);
+             ss(ws).emit(message.id, stream);
             /*const responseMessage = ServerUtils.checkData(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength), message.id);
             this.sendMessage(ServerUtils.getStream(responseMessage), ws, () => {
                 console.log("SENT");
