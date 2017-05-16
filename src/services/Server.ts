@@ -25,9 +25,9 @@ export class Server {
 
     startServer = () => {
         const server = require('http').createServer();
-        this.io = require('socket.io')(server, {origins: allowedOrigins});
-        this.io.set('origins', 'https://localhost:8888  http://localhost:8888 *://*:*');
-        this.io.set('transports', [ 'websocket' ]);
+        this.io = require('socket.io')(server);//, {origins: allowedOrigins});
+        //this.io.set('origins', 'https://localhost:8888  http://localhost:8888 *://*:*');
+        //this.io.set('transports', [ 'websocket' ]);
         this.waitForConnection();
         this.io.listen(port);
     };
