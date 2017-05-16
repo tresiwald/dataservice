@@ -9,11 +9,8 @@ import * as safeBuffer from "safe-buffer";
 const fs = require('fs');
 const Buffer = safeBuffer.Buffer;
 const BufferStream = require('stream');
-const Duplex = require('stream').Duplex;  
-
-
 const port = 8080;
-
+const Promise = require("bluebird");
 const allowedOrigins = "https://localhost:8888  http://localhost:8888 *://*:*";
 const path = require('path');
 const ss = require('socket.io-stream');
@@ -99,15 +96,17 @@ export class Server {
 
     processDataRequest = (stream:any, message: Message, ws: WebSocket) => {
         console.log("processDataRequest");
-        (message as DataRequestMessage).body.token.forEach((token) => {
-            
-        })
-        const token = (message as DataRequestMessage).body.token;
-        Data.getData(token, (data: Buffer) => {
-            console.log("data ready, sending it to client");
-            const responseMessage = ServerUtils.checkData(data, message.id);
+        const tokens = (message as DataRequestMessage).body.token
+        let buffer:Buffer[] = []
+        Promise.map(tokens, (token:string)=> {
+            Data.getData(token, (data: Buffer) => {
+                console.log("data ready, sending it to client");
+                buffer.push(data)
+            })
+        }).then(()=>{
+            const responseMessage = ServerUtils.checkData(msgpack.encode(buffer), message.id);
             this.sendMessage(ServerUtils.getLargeStream(responseMessage),ws,()=>{})
-        });
+        })
     };
 
     public sendMessage = (stream: any, ws: WebSocket, callback: Function) => {
