@@ -8,8 +8,9 @@ const glob = require("glob")
 const async = require('async');
 
 export const getData = (token: string, callback: Function) => {
-    const paths = getPaths(token).map((path: string) => {
-        return ("/sftp/ikcdata" + path.substr(1, path.length - 1))
+    let paths = {}
+    getPaths(token).foreach((path: string, index:string) => {
+        paths[('path'+index)]= ("/sftp/ikcdata" + path.substr(1, path.length - 1))
     })
     console.log("-----Path-----", paths)
     SFTP.init(() => {
