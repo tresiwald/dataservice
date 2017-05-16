@@ -5,32 +5,30 @@ const path = require("path")
 const readline = require("readline")
 const Promise = require("bluebird");
 const glob = require("glob")
+const async = require('async');
 
 export const getData = (token: string, callback: Function) => {
-    const path = getPath(token);
-    console.log("-----Path-----",path)
-    if (path) {
-        //return fs.createReadStream(path, 'utf8');
+    const paths = getPaths(token).map((path: string) => {
+        return ("/sftp/ikcdata" + path.substr(1, path.length - 1))
+    })
+    console.log("-----Path-----", paths)
 
-        /*
-        fs.readFile(path, 'utf8', (err: any, data: any) => {
-            console.log("file read done");
-            callback(data);
-        })
-        */
-        SFTP.init(() => {
-            SFTP.readFile(("/sftp/ikcdata" + path.substr(1,path.length - 1)), (buffer:any) => {
-                callback(buffer)
-            });
-        });
+    SFTP.init(() => {
+        async.concat(
+            paths,
+            SFTP.readFile,
+            (err: any, results: any) => {
+                callback(results)
+            })
+    })
 
+    if (paths) {
     } else {
-        // token not available, so no data is returned
         callback();
     }
 }
 
-const getPath = (token: string) => {
+const getPaths = (token: string) => {
     const accessSession = Store.getInstance().getAccessSession(token);
     if (accessSession) {
         console.log("found token");

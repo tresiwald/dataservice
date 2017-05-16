@@ -20,6 +20,7 @@
     "@types/node": "7.0.10",
     "@types/pouchdb": "5.4.28",
     "@types/ws": "0.0.39",
+    "async": "^2.4.0",
     "bluebird": "3.5.0",
     "data-model": "git+ssh://git@gitlab.enterpriselab.ch:ikc/data-model.git#master",
     "elasticlunr": "0.9.5",

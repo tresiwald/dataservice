@@ -96,14 +96,13 @@ export class Server {
 
     processDataRequest = (stream:any, message: Message, ws: WebSocket) => {
         console.log("processDataRequest");
-        const tokens = (message as DataRequestMessage).body.token
-        let buffer:ResponseData[] = []
-        Promise.map(tokens, (token:string)=> {
-            Data.getData(token, (data: Buffer) => {
-                console.log("data ready, sending it to client");
-                buffer.push(new FileData(data))
+        const token = (message as DataRequestMessage).body.token
+
+        Data.getData(token, (data: Buffer[]) => {
+            console.log("data ready, sending it to client");
+            const buffer = data.map((element)=>{
+                return new FileData(element)
             })
-        }).then(()=>{
             buffer.push(new LastData())
             const responseMessage = ServerUtils.checkData(msgpack.encode(buffer), message.id);
             this.sendMessage(ServerUtils.getLargeStream(responseMessage),ws,()=>{})
