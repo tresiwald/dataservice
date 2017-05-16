@@ -14,6 +14,13 @@ const path = require('path');
 const ss = require('socket.io-stream');
 const msgpack = require("msgpack-lite");
 
+const cfg = {
+        ssl: true,
+        port: 8080,
+        ssl_key: './tls/server.key',
+        ssl_cert: './tls/server.crt'
+    };
+
 export class Server {
 
     io: any;
