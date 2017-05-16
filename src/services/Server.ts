@@ -6,6 +6,7 @@ import {
 import {Store} from "./Store/Store";
 import * as Data from "./Data";
 import * as safeBuffer from "safe-buffer";
+const fs = require('fs');
 const Buffer = safeBuffer.Buffer;
 const port = 8080;
 
@@ -31,7 +32,10 @@ export class Server {
     }
 
     startServer = () => {
-        const server = require('https').createServer();
+        const server = require('https').createServer({
+            key: fs.readFileSync( cfg.ssl_key ),
+            cert: fs.readFileSync( cfg.ssl_cert )
+        });
         this.io = require('socket.io')(server);//, {origins: allowedOrigins});
         //this.io.set('origins', 'https://localhost:8888  http://localhost:8888 *://*:*');
         //this.io.set('transports', [ 'websocket' ]);
