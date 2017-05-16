@@ -1,6 +1,6 @@
 import {
     AccessSession, DataRequestMessage, Message, MessageType, TokenRequestMessage, TokenResponseBody,
-    TokenResponseMessage, MessageFactory, ErrorResponseBody
+    TokenResponseMessage, MessageFactory, ErrorResponseBody, Data as ResponseData, FileData, LastData
 } from "DataModel";
 
 import {Store} from "./Store/Store";
@@ -97,13 +97,14 @@ export class Server {
     processDataRequest = (stream:any, message: Message, ws: WebSocket) => {
         console.log("processDataRequest");
         const tokens = (message as DataRequestMessage).body.token
-        let buffer:Buffer[] = []
+        let buffer:ResponseData[] = []
         Promise.map(tokens, (token:string)=> {
             Data.getData(token, (data: Buffer) => {
                 console.log("data ready, sending it to client");
-                buffer.push(data)
+                buffer.push(new FileData(data))
             })
         }).then(()=>{
+            buffer.push(new LastData())
             const responseMessage = ServerUtils.checkData(msgpack.encode(buffer), message.id);
             this.sendMessage(ServerUtils.getLargeStream(responseMessage),ws,()=>{})
         })
