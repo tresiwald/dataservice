@@ -104,7 +104,14 @@ export class Server {
             console.log("data ready, sending it to client");
             const stream = ss.createStream();
             const bufferStream = new BufferStream.PassThrough();
-            bufferStream.end(data);
+            for(var i = 0; i<data.length; i = i + 1000000){
+                if((i + 1000000) < data.length){
+                    bufferStream.write(Buffer.from(data),i,1000000)
+                }else{
+                    bufferStream.write(Buffer.from(data),i,data.length -1)                
+                }
+            }
+            bufferStream.end();
             bufferStream.pipe(stream);
             
              ss(ws).emit(message.id, stream);
