@@ -12,7 +12,6 @@ export const getData = (token: string, callback: Function) => {
         return ("/sftp/ikcdata" + path.substr(1, path.length - 1))
     })
     console.log("-----Path-----", paths)
-
     SFTP.init(() => {
         async.mapSeries(
             paths,
