@@ -93,7 +93,7 @@ export class Server {
         console.log("---------------------------------------------------------------------------");
         console.log(newMsg);
         console.log("---------------------------------------------------------------------------");
-        this.sendMessage(ServerUtils.getStream(newMsg), ws, () => {
+        this.sendMessage(ServerUtils.getLargeStream(newMsg), ws, () => {
         });
     };
 
@@ -103,7 +103,7 @@ export class Server {
         Data.getData(token, (data: Buffer) => {
             console.log("data ready, sending it to client");
             const responseMessage = ServerUtils.checkData(data, message.id);
-            ss(ws).emit(message.id, ServerUtils.getLargeStream(responseMessage));
+            this.sendMessage(ServerUtils.getLargeStream(responseMessage),ws,()=>{})
         });
     };
 
