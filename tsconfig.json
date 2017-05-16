@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es6",
+    "jsx": "react",
+    "lib": [
+      "dom",
+      "es6",
+      "scripthost"
+    ],
+    "typeRoots": [
+      "/node_modules/@types/"
+    ],
+    "types": [
+      "node"
+    ],
+    "moduleResolution": "node",
+    "isolatedModules": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declaration": false,
+    "removeComments": true,
+    "noLib": false,
+    "preserveConstEnums": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noEmit": false,
+    "allowJs": true
+  },
+  "exclude": [
+    "node_modules",
+    "typings"
+  ],
+  "include": [
+    "./src/*",
+    "./node_modules/typescript/lib/typescript.d.ts",
+    "./node_modules/typescript/lib/lib.es6.d.ts",
+    "./node_modules/typescript/lib/lib.es2015.promise.d.ts",
+    "./node_modules/typescript/lib/lib.es2015.iterable.d.ts"
+
+    //"./node_modules/typescript/lib/lib.webworker.d.ts",
+    //"./node_modules/typescript/lib/lib.d.ts"
+    //"./node_modules/typescript/lib/lib.dom.d.ts"
+  ]
+}

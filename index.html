@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+
+</head>
+<body>
+
+<div>
+    <a href="javascript:socketLogin()">Load / Build Index</a>
+</div>
+<div>
+    <a href="javascript:sendPulse()">Get Keywords</a>
+</div>
+<div>
+    <a href="javascript:search()">Search U2</a>
+</div>
+
+<div>
+    <input id="spaceId" placeholder="space id">
+    <br>
+    <input id="itemId" placeholder="item id">
+    <br>
+    <a href="javascript:lockItem()">Lock Item</a>
+    <a href="javascript:releaseItemLock()">Release Item Lock</a>
+    <br>
+    <input id="updateContent" placeholder="update content">
+    <br>
+    <a href="javascript:updateItem()">Update Item</a>
+</div>
+<div>
+    <a href="javascript:socketLogout()">Logout</a>
+</div>
+<div id="log">
+    <H1>Log</H1>
+</div>
+</body>
+
+<script type="text/javascript">
+    // Create a socket instance
+    var socket = new WebSocket('ws://localhost:3000');
+    var logContainer = document.getElementById("log")
+
+    var clientId = ""
+
+
+    socket.onmessage = function (event) {
+        var data = JSON.parse(event.data)
+        if (data.type.value == "LOGIN_RESPONSE") {
+            clientId = data.body.clientId
+        }
+
+        printToLogContainer("Received " + event.data)
+    };
+
+    function socketLogin() {
+        if (clientId == "") {
+            socket.send(JSON.stringify({type: {value: 'INDEX'}, body: {}}));
+        } else {
+            printToLogContainer("Already logged in, clientId: " + clientId)
+        }
+    }
+    function socketLogout() {
+        socket.send(JSON.stringify({type: {value: 'LOGOUT'}, body: {clientId: clientId}}));
+        clientId = ""
+    }
+
+    function sendPulse() {
+        socket.send(JSON.stringify({type: {value: 'GET_KEYWORDS'}, body: {clientId: clientId}}));
+    }
+
+    function search() {
+        socket.send(JSON.stringify({type: {value: 'SEARCH'}, body: {term: "u2"}}));
+    }
+
+    function lockItem() {
+        var spaceId = document.getElementById("spaceId").value
+        var itemId = document.getElementById("itemId").value
+
+        if (clientId != "") {
+            socket.send(JSON.stringify({
+                type: {value: 'REQUEST_LOCK'},
+                body: {clientId: clientId, spaceId: spaceId, itemId: itemId}
+            }));
+        } else {
+            printToLogContainer("Not logged in")
+        }
+    }
+
+    function releaseItemLock() {
+        var spaceId = document.getElementById("spaceId").value
+        var itemId = document.getElementById("itemId").value
+
+        if (clientId != "") {
+            socket.send(JSON.stringify({
+                type: {value: 'RELEASE_LOCK'},
+                body: {clientId: clientId, spaceId: spaceId, itemId: itemId}
+            }));
+        } else {
+            printToLogContainer("Not logged in")
+        }
+    }
+
+    function updateItem() {
+        var spaceId = document.getElementById("spaceId").value
+        var itemId = document.getElementById("itemId").value
+        var updateContent = document.getElementById("updateContent").value
+
+        if (clientId != "") {
+            socket.send(JSON.stringify({
+                type: {value: 'ITEM_UPDATE'},
+                body: {clientId: clientId, spaceId: spaceId, itemId: itemId, content: updateContent}
+            }));
+        } else {
+            printToLogContainer("Not logged in")
+        }
+    }
+
+    function printToLogContainer(text) {
+        logContainer.innerHTML = logContainer.innerHTML + "<br>" + text
+
+    }
+
+</script>
+</html>

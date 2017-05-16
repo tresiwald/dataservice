@@ -1,0 +1,7 @@
+{
+  "globalDependencies": {
+    "require": "registry:dt/require"
+  },
+  "dependencies": {
+  }
+}
