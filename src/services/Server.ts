@@ -37,7 +37,8 @@ export class Server {
             cert: fs.readFileSync( cfg.ssl_cert )
         })
         this.io = require('socket.io').listen(server);//, {origins: allowedOrigins});
-        //this.io.set('origins', 'https://localhost:8888  http://localhost:8888 *://*:*');
+        //
+        this.io.set('origins', 'https://localhost:8888  http://localhost:8888 *://*:*');
         //this.io.set('transports', [ 'websocket' ]);
         server.listen(cfg.port);
         this.waitForConnection();
