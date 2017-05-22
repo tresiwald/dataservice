@@ -99,7 +99,7 @@ export class SSH {
 
         const interval = setInterval(()=> {
             if(this.ready){
-                this.sftp.exec(("ls -d -1 " + path), (err:any, stream:any) => {
+                this.conn.exec(("ls -d -1 " + path), (err:any, stream:any) => {
                     console.log(stream)
                     callback(stream)
                 })
