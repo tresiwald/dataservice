@@ -15,7 +15,17 @@ module ExternalDataAccessService {
         if(preCompiledPaths.length == 1 && preCompiledPaths.indexOf("*.*") == -1){
                 SFTP.init(() => {
                     SFTP.listFile(("/sftp/ikcdata" + preCompiledPaths[0].substr(1, preCompiledPaths[0].length - 1)), (paths: string[]) => {
-                        console.log(paths)
+                            async.map(
+                                paths,
+                                (path: any, callback: any) => {
+                                    SFTP.readFile(path, (data: any) => {
+                                        callback(null, {data: data, path: path})
+                                    })
+                                },
+                                (err: any, results: any) => {
+                                    callback(results)
+                                })
+
                     })
                 })
         }else{
