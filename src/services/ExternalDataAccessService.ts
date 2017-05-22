@@ -14,7 +14,7 @@ module ExternalDataAccessService {
         const preCompiledPaths = getPaths(token);
         if(preCompiledPaths.length == 1 && preCompiledPaths.indexOf("*.*") == -1){
                 SFTP.init(() => {
-                    SFTP.listFile(("/sftp/ikcdata" + preCompiledPaths[0].substr(1, preCompiledPaths.length - 1)), (paths: string[]) => {
+                    SFTP.listFile(("/sftp/ikcdata" + preCompiledPaths[0].substr(1, preCompiledPaths[0].length - 1)), (paths: string[]) => {
                         console.log(paths)
                     })
                 })
