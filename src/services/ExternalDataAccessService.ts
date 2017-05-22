@@ -13,11 +13,13 @@ module ExternalDataAccessService {
     export const getData = (token: string, callback: Function) => {
         const preCompiledPaths = getPaths(token);
         if(preCompiledPaths.length == 1 && preCompiledPaths.indexOf("*.*") == -1){
-            SFTP.init(() => {
-                SFTP.listFile(("/sftp/ikcdata" + preCompiledPaths[0]), (paths: string[]) => {
-                    console.log(paths)
+            setTimeout( () => {
+                SFTP.init(() => {
+                    SFTP.listFile(("/sftp/ikcdata" + preCompiledPaths[0].substr(1, path.length - 1)), (paths: string[]) => {
+                        console.log(paths)
+                    })
                 })
-            })
+            },400)
         }else{
             const paths = preCompiledPaths.map((path: string) => {
                 return ("/sftp/ikcdata" + path.substr(1, path.length - 1))
