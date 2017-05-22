@@ -102,8 +102,13 @@ export class SSH {
         const interval = setInterval(()=> {
             if(this.ready){
                 this.conn.exec(("ls -d -1 " + path), (err:any, stream:any) => {
-                    console.log(stream)
-                    callback(stream)
+                    let bufs: any[] = [];
+                    stream.on('data', function(data:any) {
+                        console.log(data.toString());
+                    }).on("end", () => {
+                        let buf = bufs.concat()
+                        callback(buf.toString())
+                    });
                 })
                 clearInterval(interval)
             }
