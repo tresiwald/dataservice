@@ -69,7 +69,11 @@ export class SSH {
     };
 
     public readDir = (path: string, callback: Function) => {
-        while(!this.ready){}
+        const interval = setInterval(()=> {
+            if(this.ready){
+                clearInterval(interval)
+            }
+        },200)
         this.sftp.readdir(path, (err: any, list: any) => {
             if (err) throw err;
             callback(list);
@@ -77,7 +81,11 @@ export class SSH {
     };
 
     public readFile = (path: string, callback: Function) => {
-        while(!this.ready){}
+        const interval = setInterval(()=> {
+            if(this.ready){
+                clearInterval(interval)
+            }
+        },200)
         this.sftp.readFile(path, (err:any, buffer:any) => {
             if(err) throw err;
 
