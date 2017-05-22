@@ -4,7 +4,7 @@ import {
 } from "DataModel";
 
 import {Store} from "./Store/Store";
-import * as Data from "./Data";
+import * as Data from "./ExternalDataAccessService";
 import * as safeBuffer from "safe-buffer";
 const fs = require('fs');
 const Buffer = safeBuffer.Buffer;
