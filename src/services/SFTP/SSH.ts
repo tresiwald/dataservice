@@ -71,26 +71,28 @@ export class SSH {
     public readDir = (path: string, callback: Function) => {
         const interval = setInterval(()=> {
             if(this.ready){
+                this.sftp.readdir(path, (err: any, list: any) => {
+                    if (err) throw err;
+                    callback(list);
+                });
                 clearInterval(interval)
             }
         },200)
-        this.sftp.readdir(path, (err: any, list: any) => {
-            if (err) throw err;
-            callback(list);
-        });
+
     };
 
     public readFile = (path: string, callback: Function) => {
         const interval = setInterval(()=> {
             if(this.ready){
+                this.sftp.readFile(path, (err:any, buffer:any) => {
+                    if(err) throw err;
+
+                    callback(buffer);
+                });
                 clearInterval(interval)
             }
         },200)
-        this.sftp.readFile(path, (err:any, buffer:any) => {
-            if(err) throw err;
 
-            callback(buffer);
-        });
     }
 
     public listFiles = (path: string, callback: Function) => {
