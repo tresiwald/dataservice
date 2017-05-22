@@ -13,4 +13,12 @@ module Common {
     export function getTimestamp(): string {
         return (new Date).getTime().toString()
     }
+
+        export const applyMixins = (derivedCtor: any, baseCtors: any[]): any => {
+            baseCtors.forEach(baseCtor => {
+                Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
+                    derivedCtor.prototype[name] = baseCtor.prototype[name];
+                });
+            });
+        }
 }

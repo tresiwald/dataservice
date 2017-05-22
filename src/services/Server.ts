@@ -78,7 +78,7 @@ export class Server {
             case MessageType.TOKEN_REQUEST.value:
                 return this.processTokenRequest(message, ws);
             case MessageType.DATA_REQUEST.value:
-                return this.processDataRequest(stream, message, ws);
+                return this.processDataRequest(message, ws);
         }
     });
 
@@ -94,7 +94,7 @@ export class Server {
         });
     };
 
-    processDataRequest = (stream:any, message: Message, ws: WebSocket) => {
+    processDataRequest = (message: Message, ws: WebSocket) => {
         console.log("processDataRequest");
         const token = (message as DataRequestMessage).body.token
 
