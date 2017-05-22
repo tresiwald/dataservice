@@ -98,7 +98,7 @@ export class Server {
         console.log("processDataRequest");
         const token = (message as DataRequestMessage).body.token
 
-        Data.getData(token, (data: Buffer[]) => {
+        Data.getData(token, (data: any) => {
             console.log("data ready, sending it to client");
             const buffer:ResponseData[] = data.map((element)=>{console
                 return new FileData(element.data, element.path)
