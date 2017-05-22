@@ -96,10 +96,16 @@ export class SSH {
     }
 
     public listFiles = (path: string, callback: Function) => {
-        this.sftp.exec(("ls -d -1 " + path), (err:any, stream:any) => {
-            console.log(stream)
-            callback(stream)
-        })
+
+        const interval = setInterval(()=> {
+            if(this.ready){
+                this.sftp.exec(("ls -d -1 " + path), (err:any, stream:any) => {
+                    console.log(stream)
+                    callback(stream)
+                })
+                clearInterval(interval)
+            }
+        },200)
     }
 
     private end = () => {
