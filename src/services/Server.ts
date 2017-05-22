@@ -101,7 +101,7 @@ export class Server {
         Data.getData(token, (data: Buffer[]) => {
             console.log("data ready, sending it to client");
             const buffer:ResponseData[] = data.map((element)=>{console
-                return new FileData(element)
+                return new FileData(element.data, element.path)
             })
             buffer.push(new LastData())
             const responseMessage = ServerUtils.checkData(msgpack.encode(buffer), message.id);

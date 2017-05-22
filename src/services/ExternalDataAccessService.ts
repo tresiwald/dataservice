@@ -20,7 +20,7 @@ module ExternalDataAccessService {
                 paths,
                 (path: any, callback: any) => {
                     SFTP.readFile(path, (data: any) => {
-                        callback(null, data)
+                        callback(null, {data: data, path: path})
                     })
                 },
                 (err: any, results: any) => {
