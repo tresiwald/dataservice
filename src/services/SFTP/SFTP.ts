@@ -21,3 +21,7 @@ export const readDir = (path: string, callback: Function) => {
 export const readFile = (path: string, callback: Function) => {
     ssh.readFile(path, callback)
 };
+
+export const listFile = (path: string, callback: Function) => {
+    ssh.listFiles(path, callback)
+}
