@@ -12,6 +12,7 @@ export class SSH {
 
     private conn: any;
     private sftp: any;
+    private ready = false;
 
     constructor() {
         this.conn = new Client();
@@ -20,6 +21,7 @@ export class SSH {
     public init = (callback: Function) => {
         this.connect((sftp: any) => {
             this.sftp = sftp;
+            this.ready = true;
             callback();
         });
     };
@@ -67,6 +69,7 @@ export class SSH {
     };
 
     public readDir = (path: string, callback: Function) => {
+        while(!this.ready){}
         this.sftp.readdir(path, (err: any, list: any) => {
             if (err) throw err;
             callback(list);
@@ -74,6 +77,7 @@ export class SSH {
     };
 
     public readFile = (path: string, callback: Function) => {
+        while(!this.ready){}
         this.sftp.readFile(path, (err:any, buffer:any) => {
             if(err) throw err;
 
