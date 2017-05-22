@@ -85,9 +85,11 @@ export class SSH {
         const interval = setInterval(()=> {
             if(this.ready){
                 this.sftp.readFile(path, (err:any, buffer:any) => {
-                    if(err) callback([]);
-
-                    callback(buffer);
+                    if(err) {
+                        callback([]);
+                    }else{
+                        callback(buffer);
+                    }
                 });
                 clearInterval(interval)
             }
