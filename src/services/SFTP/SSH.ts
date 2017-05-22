@@ -106,8 +106,8 @@ export class SSH {
                     stream.on('data', function(data:any) {
                         bufs.push(data)
                     }).on("end", () => {
-                        let buf = bufs.concat()
-                        callback(buf.toString())
+                        let buf = Buffer.concat(bufs)
+                        callback(buf.toString().split('\n'))
                     });
                 })
                 clearInterval(interval)
