@@ -104,7 +104,7 @@ export class SSH {
                 this.conn.exec(("ls -d -1 " + path), (err:any, stream:any) => {
                     let bufs: any[] = [];
                     stream.on('data', function(data:any) {
-                        console.log(data.toString());
+                        bufs.push(data)
                     }).on("end", () => {
                         let buf = bufs.concat()
                         callback(buf.toString())
