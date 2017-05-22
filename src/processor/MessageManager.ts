@@ -37,8 +37,8 @@ module MessageManager{
 class Request implements Processor, Mapper{
     message: Message;
     callback: Function;
-    process: (message: Message) => Result;
-    map: (result: Result) => Message;
+    process: (message: Message) => Promise<Result>;
+    map: (result: Result) => Promise<Message>;
 
     constructor(message: Message, callback: Function) {
         this.message = message;
@@ -46,8 +46,14 @@ class Request implements Processor, Mapper{
     }
 
     run = () =>{
-        let result = this.process(this.message)
-        let returnMessage = this.map(result)
-        this.callback(returnMessage)
+        this.process(this.message).then((result) => {
+            this.map(result).then((returnMessage) => {
+                this.callback(returnMessage)
+            }).catch(() => {
+                console.log("Error mapping result")
+            })
+        }).catch(() => {
+            console.log("Error processing result")
+        })
     }
 }

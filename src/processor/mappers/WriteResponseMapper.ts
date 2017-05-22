@@ -3,7 +3,7 @@ import {WriteRequestMessage} from "DataModel"
 import {WriteRequestResult} from "../results/WriteRequestResult";
 
 export class WriteResponseMapper implements Mapper{
-    map(requestId:string, result: WriteRequestResult): WriteRequestMessage {
+    map(requestId:string, result: WriteRequestResult): Promise<WriteRequestMessage> {
         return null;
     }
 }

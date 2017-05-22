@@ -7,10 +7,10 @@ import {WriteResponseMapper} from "./WriteResponseMapper";
 export = MapperFactory
 
 type Processor = DataRequestProcessor | TokenRequestProcessor | WriteRequestProcessor;
-type Mapper = DataResponseMapper | TokenResponseMapper | WriteResponseMapper;
+// type Mapper = DataResponseMapper | TokenResponseMapper | WriteResponseMapper;
 
 module MapperFactory{
-    export const getMapperClass = (ProcessorImplementation: Processor): Mapper => {
+    export const getMapperClass = (ProcessorImplementation: Processor): any => {
         switch (getClassName(ProcessorImplementation)){
             case getClassName(TokenRequestProcessor):
                 return TokenResponseMapper;
@@ -23,6 +23,5 @@ module MapperFactory{
 
     const getClassName = (classType:any) => {
         return (new classType()).constructor.name
-
     }
 }
