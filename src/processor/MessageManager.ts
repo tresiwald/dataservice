@@ -38,7 +38,7 @@ class Request implements Processor, Mapper{
     message: Message;
     callback: Function;
     process: (message: Message) => Promise<Result>;
-    map: (result: Result) => Promise<Message>;
+    map: (requestId:string, result: Result) => Promise<Message>;
 
     constructor(message: Message, callback: Function) {
         this.message = message;
@@ -47,7 +47,7 @@ class Request implements Processor, Mapper{
 
     run = () =>{
         this.process(this.message).then((result) => {
-            this.map(result).then((returnMessage) => {
+            this.map(this.message.id, result).then((returnMessage) => {
                 this.callback(returnMessage)
             }).catch(() => {
                 console.log("Error mapping result")
