@@ -12,13 +12,14 @@ export class DataResponseMapper implements Mapper{
         })
         buffer.push(new LastData())
         return new Promise(((resolve, reject) => {
-            const responseMessage = this.checkData(msgpack.encode(buffer), requestId);
+            const responseMessage = DataResponseMapperHelper.checkData(msgpack.encode(buffer), requestId);
             resolve(responseMessage)
         }))
     }
+}
 
-
-    private checkData = (data: any, oldMsgId: string): any => {
+module DataResponseMapperHelper {
+    export const checkData = (data: any, oldMsgId: string): any => {
         if (data) {
             return MessageFactory.getMessageWithBodyAndID(MessageType.DATA_RESPONSE, data, oldMsgId);
         } else {
