@@ -4,12 +4,12 @@ import {WriteRequestResult} from "../results/WriteRequestResult";
 
 export class WriteResponseMapper implements Mapper{
     map(requestId:string, result: WriteRequestResult): Promise<WriteRequestMessage> {
-        const message = MessageFactory.getMessageWithBodyAndID(
-            MessageType.WRITE_RESPONSE,
-            new WriteResponseBody(),
-            requestId
-        )
         return new Promise((resolve, reject) => {
+            const message = MessageFactory.getMessageWithBodyAndID(
+                MessageType.WRITE_RESPONSE,
+                new WriteResponseBody(),
+                requestId
+            )
             resolve(message)
         })
     }
