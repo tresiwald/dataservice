@@ -1,7 +1,7 @@
 import {Processor} from "./Processor";
 import {TokenRequestMessage} from "DataModel";
 import {TokenRequestResult} from "../results/TokenRequestResult";
-import {Store} from "../../Store/Store";
+import {Store} from "../../common/Store";
 
 export class TokenRequestProcessor implements Processor{
     process(message: TokenRequestMessage): Promise<TokenRequestResult> {

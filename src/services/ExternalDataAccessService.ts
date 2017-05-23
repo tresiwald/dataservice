@@ -1,4 +1,4 @@
-import {Store} from "../Store/Store";
+import {Store} from "../common/Store";
 import * as SFTP from "./SFTPService";
 import construct = Reflect.construct;
 const fs = require('graceful-fs');
