@@ -4,10 +4,10 @@ import {
 } from "DataModel";
 
 import {Store} from "./Store/Store";
-import * as Data from "./ExternalDataAccessService";
 import * as safeBuffer from "safe-buffer";
 import * as MessageManager from "../processor/MessageManager";
-import * as SocketStore from "./Store/SocketStore";
+import SocketStore from "./Store/SocketStore";
+import {ExternalDataAccessService} from "./ExternalDataAccessService";
 const fs = require('fs');
 const Buffer = safeBuffer.Buffer;
 const BufferStream = require('stream');
@@ -98,7 +98,7 @@ export class Server {
         console.log("processDataRequest");
         const token = (message as DataRequestMessage).body.token
 
-        Data.getData(token, (data: any) => {
+        ExternalDataAccessService.getData(token, (data: any) => {
             console.log("data ready, sending it to client");
             const buffer:ResponseData[] = data.map((element: any)=>{
                 return new FileData(element.data, element.path)

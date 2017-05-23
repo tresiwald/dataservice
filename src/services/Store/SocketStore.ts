@@ -1,4 +1,4 @@
-class SocketStore{
+export default class SocketStore{
     sockets = new Map <string, any>()
 
     getSocket = (socketId: string):any => {

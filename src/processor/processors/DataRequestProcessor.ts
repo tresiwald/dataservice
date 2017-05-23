@@ -1,8 +1,7 @@
 import {Processor} from "./Processor";
 import {DataRequestMessage} from "DataModel";
 import {DataRequestResult} from "../results/DataRequestResult";
-import * as ExternalDataAccessService from "../../services/ExternalDataAccessService";
-import {ExternalDataElement} from "../../services/ExternalDataAccessService";
+import {ExternalDataElement, ExternalDataAccessService} from "../../services/ExternalDataAccessService";
 
 export class DataRequestProcessor implements Processor{
     process(message: DataRequestMessage): Promise<DataRequestResult> {
