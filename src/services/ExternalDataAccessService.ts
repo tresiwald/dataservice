@@ -55,7 +55,7 @@ export module ExternalDataAccessService {
         const path = getPaths(token)[0];
 
         SFTP.init(() => {
-            SFTP.writeFile(path, buffer, () => {
+            SFTP.writeFile("/sftp/ikcdata" + path.substr(1, path.length - 1), buffer, () => {
                 callback()
             })
         })
