@@ -1,5 +1,5 @@
-import {Store} from "./Store/Store";
-import * as SFTP from "./SFTP/SFTP";
+import {Store} from "../Store/Store";
+import * as SFTP from "./SFTPService";
 import construct = Reflect.construct;
 const fs = require('graceful-fs');
 const path = require("path")
@@ -51,6 +51,17 @@ export module ExternalDataAccessService {
         }
     }
 
+    export const writeData = (token: string, buffer: any, callback: Function) => {
+        const path = getPaths(token)[0];
+
+        SFTP.init(() => {
+            SFTP.writeFile(path, buffer, () => {
+                callback()
+            })
+        })
+
+    }
+
     const getPaths = (token: string) => {
         const accessSession = Store.getInstance().getAccessSession(token);
         if (accessSession) {
@@ -60,6 +71,7 @@ export module ExternalDataAccessService {
             console.log("no token");
         }
     }
+
 }
 
 export class ExternalDataElement {

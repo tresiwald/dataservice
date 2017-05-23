@@ -1,5 +1,5 @@
 import {AccessSession} from "DataModel";
-import * as Common from "../../Common";
+import * as Common from "./Common";
 export class Store {
 
     private static _instance: Store = new Store();

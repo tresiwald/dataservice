@@ -1,4 +1,4 @@
-import {SSH} from "./SSH";
+import {SSH} from "./SSHService";
 
 let ssh: any;
 
@@ -24,4 +24,8 @@ export const readFile = (path: string, callback: Function) => {
 
 export const listFile = (path: string, callback: Function) => {
     ssh.listFiles(path, callback)
+}
+
+export const writeFile = (path: string, content: any, callback: Function) => {
+    ssh.writeFile(path, content, callback)
 }

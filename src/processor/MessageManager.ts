@@ -1,7 +1,5 @@
-import {
-    DataRequestMessage, Message, MessageType, TokenRequestMessage
-} from "DataModel";
-import * as Common from "../Common";
+import {Message, MessageType} from "DataModel";
+import * as Common from "../common/Common";
 import {Processor} from "./processors/Processor";
 import {Mapper} from "./mappers/Mapper";
 import {Result} from "./results/Result";

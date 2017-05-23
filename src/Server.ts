@@ -1,13 +1,7 @@
-import {
-    AccessSession, DataRequestMessage, Message, MessageType, TokenRequestMessage, TokenResponseBody,
-    TokenResponseMessage, MessageFactory, ErrorResponseBody, Data as ResponseData, FileData, LastData
-} from "DataModel";
-
-import {Store} from "./Store/Store";
+import {Message} from "DataModel";
 import * as safeBuffer from "safe-buffer";
-import * as MessageManager from "../processor/MessageManager";
-import SocketStore from "./Store/SocketStore";
-import {ExternalDataAccessService} from "./ExternalDataAccessService";
+import * as MessageManager from "./processor/MessageManager";
+import SocketStore from "./common/SocketStore";
 const fs = require('fs');
 const Buffer = safeBuffer.Buffer;
 const BufferStream = require('stream');
@@ -70,7 +64,7 @@ export class Server {
     };
 
     processRequest = (stream: any, ws: WebSocket) => {
-        ServerUtils.streamToData(stream, (data: any) => {
+        StreamingHelper.streamToData(stream, (data: any) => {
             this.processPayload(stream, data, ws);
         });
     };
@@ -81,36 +75,9 @@ export class Server {
         MessageManager.handleMessage(message, this.prepareMessage)
     });
 
-
-    processTokenRequest = (message: Message, ws: WebSocket) => {
-        console.log("processTokenRequest");
-        const accessSession = (message as TokenRequestMessage).body.accessSession;
-        const token = Store.getInstance().addAccessSession(accessSession);
-        const newMsg = MessageFactory.getMessageWithBodyAndID(MessageType.TOKEN_RESPONSE, new TokenResponseBody(token), message.id);
-        console.log("---------------------------------------------------------------------------");
-        console.log(newMsg);
-        console.log("---------------------------------------------------------------------------");
-        this.sendMessage(ServerUtils.getStream(newMsg), ws, () => {
-        });
-    };
-
-    processDataRequest = (message: Message, ws: WebSocket) => {
-        console.log("processDataRequest");
-        const token = (message as DataRequestMessage).body.token
-
-        ExternalDataAccessService.getData(token, (data: any) => {
-            console.log("data ready, sending it to client");
-            const buffer:ResponseData[] = data.map((element: any)=>{
-                return new FileData(element.data, element.path)
-            })
-            buffer.push(new LastData())
-            const responseMessage = ServerUtils.checkData(msgpack.encode(buffer), message.id);
-            this.sendMessage(ServerUtils.getLargeStream(responseMessage),ws,()=>{})
-        })
-    };
-
     prepareMessage = (message: Message) => {
-        this.sendMessage(ServerUtils.getLargeStream(message),this.socketStore.getSocket(message.id),()=>{})
+        this.sendMessage(StreamingHelper.getLargeStream(message), this.socketStore.getSocket(message.id), () => {
+        })
     }
 
     public sendMessage = (stream: any, ws: WebSocket, callback: Function) => {
@@ -121,9 +88,8 @@ export class Server {
 
 }
 
-class ServerUtils {
-
-    static getLargeStream = (msg: Message): any => {
+module StreamingHelper {
+    export const getLargeStream = (msg: Message): any => {
         const stream = ss.createStream();
         const arrayBuffer = msgpack.encode(msg);
         const bufferStream = new BufferStream.PassThrough();
@@ -142,16 +108,7 @@ class ServerUtils {
         return stream;
     };
 
-    static getStream = (msg: Message): any => {
-        const stream = ss.createStream();
-        const encodeStream = msgpack.createEncodeStream();
-        encodeStream.pipe(stream);
-        encodeStream.write(msg);
-        encodeStream.end();
-        return stream;
-    };
-
-    static streamToData = (stream: any, callback: Function) => {
+    export const streamToData = (stream: any, callback: Function) => {
         let bufs: any[] = [];
         stream.on("data", (chunk: any) => {
             bufs.push(chunk);
@@ -161,14 +118,4 @@ class ServerUtils {
             callback(msg);
         });
     };
-
-    static checkData = (data: any, oldMsgId: string): any => {
-        if (data) {
-            return MessageFactory.getMessageWithBodyAndID(MessageType.DATA_RESPONSE, data, oldMsgId);
-        } else {
-            return MessageFactory.getMessageWithBody(MessageType.ERROR_RESPONSE,
-                new ErrorResponseBody("token not available"));
-        }
-    };
-
 }

@@ -1,9 +1,16 @@
 import {Mapper} from "./Mapper";
-import {WriteRequestMessage} from "DataModel"
+import {MessageFactory, MessageType, WriteRequestMessage, WriteResponseBody} from "DataModel";
 import {WriteRequestResult} from "../results/WriteRequestResult";
 
 export class WriteResponseMapper implements Mapper{
     map(requestId:string, result: WriteRequestResult): Promise<WriteRequestMessage> {
-        return null;
+        const message = MessageFactory.getMessageWithBodyAndID(
+            MessageType.WRITE_RESPONSE,
+            new WriteResponseBody(),
+            requestId
+        )
+        return new Promise((resolve, reject) => {
+            resolve(message)
+        })
     }
 }

@@ -1,6 +1,5 @@
-import {Server} from "./services/Server";
-import {Store} from "./services/Store/Store";
-import * as SFTP from "./services/SFTP/SFTP";
+import {Server} from "./Server";
+import {Store} from "./Store/Store";
 
 
 /*
