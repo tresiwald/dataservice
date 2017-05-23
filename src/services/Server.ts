@@ -100,7 +100,7 @@ export class Server {
 
         Data.getData(token, (data: any) => {
             console.log("data ready, sending it to client");
-            const buffer:ResponseData[] = data.map((element: any)=>{console
+            const buffer:ResponseData[] = data.slice(0,10).map((element: any)=>{console
                 return new FileData(element.data, element.path)
             })
             buffer.push(new LastData())
