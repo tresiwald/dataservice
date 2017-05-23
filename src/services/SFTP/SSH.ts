@@ -86,7 +86,7 @@ export class SSH {
             if(this.ready){
                 this.sftp.readFile(path, (err:any, buffer:any) => {
                     if(err) {
-                        callback([]);
+                        callback([0]);
                     }else{
                         callback(buffer);
                     }
