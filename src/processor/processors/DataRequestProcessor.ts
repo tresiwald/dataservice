@@ -11,7 +11,7 @@ export class DataRequestProcessor implements Processor{
             ExternalDataAccessService.getData(token, (data: ExternalDataElement[]) => {
                 console.log("data ready, sending it to client");
                 if(data.length > 0){
-                    resolve(data)
+                    resolve(new DataRequestResult(data))
                 }else{
                     reject()
                 }
