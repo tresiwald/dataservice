@@ -18,7 +18,7 @@ export module ExternalDataAccessService {
                                 paths,
                                 (path: any, callback: any) => {
                                     SFTP.readFile(path, (data: any) => {
-                                        callback(null, new ExternalDataElement(path, data))
+                                        callback(null, new ExternalDataElement(path.replace("/sftp/ikcdata", "."), data))
                                     })
                                 },
                                 (err: any, results: any) => {
@@ -38,7 +38,7 @@ export module ExternalDataAccessService {
                         paths,
                         (path: any, callback: any) => {
                             SFTP.readFile(path, (data: any) => {
-                                callback(null, new ExternalDataElement(path, data))
+                                callback(null, new ExternalDataElement(path.replace("/sftp/ikcdata", "."), data))
                             })
                         },
                         (err: any, results: any) => {
