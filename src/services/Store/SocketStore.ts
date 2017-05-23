@@ -1,6 +1,9 @@
 export default class SocketStore{
     sockets = new Map <string, any>()
 
+    constructor() {
+    }
+
     getSocket = (socketId: string):any => {
         const entry = this.sockets.get(socketId);
         this.sockets.delete(socketId)
