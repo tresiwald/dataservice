@@ -6,6 +6,8 @@ import {
 import {Store} from "./Store/Store";
 import * as Data from "./ExternalDataAccessService";
 import * as safeBuffer from "safe-buffer";
+import * as MessageManager from "../processor/MessageManager";
+import * as SocketStore from "./Store/SocketStore";
 const fs = require('fs');
 const Buffer = safeBuffer.Buffer;
 const BufferStream = require('stream');
@@ -26,6 +28,7 @@ const cfg = {
 export class Server {
 
     io: any;
+    socketStore = new SocketStore()
 
     constructor() {
         this.startServer();
@@ -74,13 +77,10 @@ export class Server {
 
     processPayload = ((stream:any, message: Message, ws: WebSocket) => {
         console.log(message);
-        switch (message.type.value) {
-            case MessageType.TOKEN_REQUEST.value:
-                return this.processTokenRequest(message, ws);
-            case MessageType.DATA_REQUEST.value:
-                return this.processDataRequest(message, ws);
-        }
+        this.socketStore.setSocket(message.id,ws)
+        MessageManager.handleMessage(message, this.prepareMessage)
     });
+
 
     processTokenRequest = (message: Message, ws: WebSocket) => {
         console.log("processTokenRequest");
@@ -100,7 +100,7 @@ export class Server {
 
         Data.getData(token, (data: any) => {
             console.log("data ready, sending it to client");
-            const buffer:ResponseData[] = data.map((element: any)=>{console
+            const buffer:ResponseData[] = data.map((element: any)=>{
                 return new FileData(element.data, element.path)
             })
             buffer.push(new LastData())
@@ -108,6 +108,10 @@ export class Server {
             this.sendMessage(ServerUtils.getLargeStream(responseMessage),ws,()=>{})
         })
     };
+
+    prepareMessage = (message: Message) => {
+        this.sendMessage(ServerUtils.getLargeStream(message),this.socketStore.getSocket(message.id),()=>{})
+    }
 
     public sendMessage = (stream: any, ws: WebSocket, callback: Function) => {
         ss(ws).emit('route', stream);
@@ -138,14 +142,14 @@ class ServerUtils {
         return stream;
     };
 
-static getStream = (msg: Message): any => {
-    const stream = ss.createStream();
-    const encodeStream = msgpack.createEncodeStream();
-    encodeStream.pipe(stream);
-    encodeStream.write(msg);
-    encodeStream.end();
-    return stream;
-};
+    static getStream = (msg: Message): any => {
+        const stream = ss.createStream();
+        const encodeStream = msgpack.createEncodeStream();
+        encodeStream.pipe(stream);
+        encodeStream.write(msg);
+        encodeStream.end();
+        return stream;
+    };
 
     static streamToData = (stream: any, callback: Function) => {
         let bufs: any[] = [];

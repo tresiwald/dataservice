@@ -1,5 +1,6 @@
 import {Store} from "./Store/Store";
 import * as SFTP from "./SFTP/SFTP";
+import construct = Reflect.construct;
 const fs = require('graceful-fs');
 const path = require("path")
 const readline = require("readline")
@@ -7,9 +8,7 @@ const Promise = require("bluebird");
 const glob = require("glob")
 const async = require('async');
 
-export = ExternalDataAccessService
-
-module ExternalDataAccessService {
+export module ExternalDataAccessService {
     export const getData = (token: string, callback: Function) => {
         const preCompiledPaths = getPaths(token);
         if(preCompiledPaths.length == 1 && preCompiledPaths.indexOf("*.*") == -1){
@@ -19,7 +18,7 @@ module ExternalDataAccessService {
                                 paths,
                                 (path: any, callback: any) => {
                                     SFTP.readFile(path, (data: any) => {
-                                        callback(null, {data: data, path: path})
+                                        callback(null, new ExternalDataElement(data, path))
                                     })
                                 },
                                 (err: any, results: any) => {
@@ -39,7 +38,7 @@ module ExternalDataAccessService {
                         paths,
                         (path: any, callback: any) => {
                             SFTP.readFile(path, (data: any) => {
-                                callback(null, {data: data, path: path})
+                                callback(null, new ExternalDataElement(data, path))
                             })
                         },
                         (err: any, results: any) => {
@@ -50,9 +49,6 @@ module ExternalDataAccessService {
                 callback();
             }
         }
-
-
-
     }
 
     const getPaths = (token: string) => {
@@ -63,5 +59,15 @@ module ExternalDataAccessService {
         } else {
             console.log("no token");
         }
+    }
+}
+
+export class ExternalDataElement {
+    path: string;
+    data: Buffer;
+
+    constructor(path: string, data: Buffer) {
+        this.path = path;
+        this.data = data;
     }
 }

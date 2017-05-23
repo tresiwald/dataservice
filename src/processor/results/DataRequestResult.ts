@@ -1,8 +1,10 @@
 import {Result} from "./Result";
-export class DataRequestResult implements Result{
-    buffer:Buffer[];
+import {ExternalDataElement} from "../../services/ExternalDataAccessService";
 
-    constructor(buffer: Buffer[]) {
+export class DataRequestResult implements Result{
+    buffer:ExternalDataElement[];
+
+    constructor(buffer: ExternalDataElement[]) {
         this.buffer = buffer;
     }
 }
