@@ -131,7 +131,7 @@ class ServerUtils {
                 console.log("Put", i, (i+1000000))
                 bufferStream.write(arrayBuffer.slice(i, i+ 1000000))
             }else{
-                bufferStream.write(arrayBuffer.slice(i, i+ arrayBuffer.length-1))            
+                bufferStream.write(arrayBuffer.slice(i, i+ arrayBuffer.length))
             }
         }
         
