@@ -84,7 +84,7 @@ export class SSH {
     public writeFile = (path: string, buffer: any, callback: Function) => {
         const interval = setInterval(() => {
             if (this.ready) {
-                this.sftp.writefile(path, buffer, (err: any, list: any) => {
+                this.sftp.writeFile(path, buffer, (err: any, list: any) => {
                     if (err) throw err;
                     callback(list);
                 });
